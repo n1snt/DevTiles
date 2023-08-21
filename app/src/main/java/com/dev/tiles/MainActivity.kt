@@ -31,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dev.tiles.ui.theme.DevTilesTheme
+import com.dev.tiles.ui.theme.StatusBarNavbarColors
 
 class MainActivity : ComponentActivity() {
 
@@ -48,6 +49,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val adbMutable = remember { mutableStateOf(adbEnabled) }
             val devMutable = remember { mutableStateOf(devOptions) }
+            StatusBarNavbarColors()
             UI(adbMutable, devMutable, { secureSettings.toggleADB() }, { secureSettings.toggleDevOptions() },
             {addToggleToQS()}) { updateStates(adbMutable, devMutable) }
         }
@@ -117,8 +119,7 @@ fun UI(
                             checked = adbMutable.value == 1,
                             onCheckedChange = {
                                 toggleAdb()
-                                updateStates()
-                                              },
+                                updateStates() },
                         )
                     }
 
@@ -132,8 +133,7 @@ fun UI(
                             checked = devMutable.value == 1,
                             onCheckedChange = {
                                 toggleDevOptions()
-                                updateStates()
-                                              },
+                                updateStates() },
                         )
                     }
 
