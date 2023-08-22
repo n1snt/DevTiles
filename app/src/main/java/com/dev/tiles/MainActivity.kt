@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             val adbMutable = remember { mutableStateOf(adbEnabled) }
             val devMutable = remember { mutableStateOf(devOptions) }
-            val startDestination = if (secureSettings.allowed())  {
+            val startDestination = if (secureSettings.allowed(null))  {
                 MAIN_SCREEN
             } else { PERMISSION_SCREEN }
 
@@ -52,7 +52,11 @@ class MainActivity : ComponentActivity() {
                         { updateStates(adbMutable, devMutable) }
                     )
                 }
-                composable(PERMISSION_SCREEN) { PermissionScreen() }
+                composable(PERMISSION_SCREEN) {
+                    PermissionScreen( { callback ->
+                        secureSettings.allowed(callback)
+                    }, { navController.navigate(MAIN_SCREEN) })
+                }
             }
         }
     }

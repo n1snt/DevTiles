@@ -1,5 +1,6 @@
 package com.dev.tiles.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,22 +11,32 @@ import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.dev.tiles.PermissionCallback
 import com.dev.tiles.R
 import com.dev.tiles.ui.theme.DevTilesTheme
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PermissionScreen() {
+fun PermissionScreen(permissionCheck: (PermissionCallback) -> Unit, navigateToMain: () -> Unit) {
+
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     DevTilesTheme {
         Surface(
@@ -34,11 +45,19 @@ fun PermissionScreen() {
         ) {
             Scaffold(
                 topBar = { TopAppBar(title = { Text(text = "Permission not granted ⚠️") }) },
+                snackbarHost = { SnackbarHost(snackbarHostState) },
                 floatingActionButton = {
                     ExtendedFloatingActionButton(
                         onClick = {
-                                  // TODO: Check if permission is granted
-                                  // If perm is granted then go to main activity.
+                            val callback = object:PermissionCallback {
+                                override fun onAllowed() {
+                                    navigateToMain()
+                                }
+                                override fun onDenied() {
+                                    permissionSnackbar("Permission not granted ❌", scope, snackbarHostState)
+                                }
+                            }
+                            permissionCheck(callback)
                         },
                         expanded = true,
                         icon = {
@@ -68,8 +87,15 @@ fun PermissionScreen() {
     }
 }
 
+@SuppressLint("RememberReturnType", "CoroutineCreationDuringComposition")
+fun permissionSnackbar(message: String, scope: CoroutineScope, snackbarHostState: SnackbarHostState) {
+    scope.launch {
+        snackbarHostState.showSnackbar(message)
+    }
+}
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun Preview() {
-    PermissionScreen()
+    PermissionScreen({ _ -> }, {})
 }

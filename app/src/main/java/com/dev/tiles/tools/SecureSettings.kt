@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.provider.Settings
 import android.util.Log
 import androidx.core.content.PermissionChecker.checkCallingOrSelfPermission
+import com.dev.tiles.PermissionCallback
 
 
 class SecureSettings(private val contentResolver: ContentResolver, private val context: Context) {
@@ -36,10 +37,16 @@ class SecureSettings(private val contentResolver: ContentResolver, private val c
             devStats.toString())
     }
 
-    fun allowed(): Boolean {
+    fun allowed(callback: PermissionCallback?): Boolean {
         val requiredPermission = "android.permission.WRITE_SECURE_SETTINGS"
         val checkVal = checkCallingOrSelfPermission(context, requiredPermission)
-        return checkVal == PackageManager.PERMISSION_GRANTED
+        val isAllowed = checkVal == PackageManager.PERMISSION_GRANTED
+        if (isAllowed) {
+            callback?.onAllowed()
+        } else {
+            callback?.onDenied()
+        }
+        return isAllowed
     }
 
 }
