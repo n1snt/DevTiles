@@ -9,4 +9,10 @@
     <string name="permission_not_granted">Permission not granted ⚠️</string>
     <string name="check_permission">Check permission</string>
     <string name="permission_not_granted_1">Permission not granted ❌</string>
+    <string name="permission_instructions">
+        DevTiles requires the write_secure_settings permission which cannot be accessed directly.
+        \n\nTo grant DevTiles write_secure_settings you would need a computer with ADB &amp; run the following command:
+        \n\nadb.exe shell pm grant com.dev.tiles android.permission.WRITE_SECURE_SETTINGS
+        \n\nClick on check permission button when done to refresh the app.
+    </string>
 </resources>

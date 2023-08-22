@@ -45,7 +45,7 @@ fun PermissionScreen(permissionCheck: (PermissionCallback) -> Unit, navigateToMa
             color = MaterialTheme.colorScheme.background
         ) {
             val permissionString = stringResource(id = R.string.permission_not_granted_1)
-                Scaffold(
+            Scaffold(
                 topBar = { TopAppBar(title = { Text(text = stringResource(R.string.permission_not_granted)) }) },
                 snackbarHost = { SnackbarHost(snackbarHostState) },
                 floatingActionButton = {
@@ -82,7 +82,7 @@ fun PermissionScreen(permissionCheck: (PermissionCallback) -> Unit, navigateToMa
                         .fillMaxSize()
                         .padding(horizontal = 25.dp)
                 ) {
-                    Text(text="TODO: Instructions here")
+                    Text(text= stringResource(R.string.permission_instructions))
                 }
             }
         }
