@@ -1,7 +1,6 @@
 package com.dev.tiles.screens
 
 import android.annotation.SuppressLint
-import android.content.res.Resources
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -45,7 +44,8 @@ fun PermissionScreen(permissionCheck: (PermissionCallback) -> Unit, navigateToMa
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            Scaffold(
+            val permissionString = stringResource(id = R.string.permission_not_granted_1)
+                Scaffold(
                 topBar = { TopAppBar(title = { Text(text = stringResource(R.string.permission_not_granted)) }) },
                 snackbarHost = { SnackbarHost(snackbarHostState) },
                 floatingActionButton = {
@@ -56,7 +56,7 @@ fun PermissionScreen(permissionCheck: (PermissionCallback) -> Unit, navigateToMa
                                     navigateToMain()
                                 }
                                 override fun onDenied() {
-                                    permissionSnackbar(Resources.getSystem().getString(R.string.permission_not_granted_1), scope, snackbarHostState)
+                                    permissionSnackbar(permissionString, scope, snackbarHostState)
                                 }
                             }
                             permissionCheck(callback)
