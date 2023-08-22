@@ -61,7 +61,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun updateStates(adbMutable: MutableState<Int>, devMutable: MutableState<Int>,) {
+    private fun updateStates(adbMutable: MutableState<Int>, devMutable: MutableState<Int>) {
         adbMutable.value = secureSettings.getADB()
         devMutable.value = secureSettings.getDevOptions()
     }

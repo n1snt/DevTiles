@@ -2,7 +2,6 @@ package com.dev.tiles.services
 
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
-import android.util.Log
 import com.dev.tiles.tools.SecureSettings
 
 class DevOptionsToggleService: TileService() {
@@ -11,7 +10,6 @@ class DevOptionsToggleService: TileService() {
         super.onClick()
         SecureSettings(contentResolver, this).toggleDevOptions()
         updateQsState()
-        Log.d("DEV OPTIONS TOGGLE", "CLICKED")
     }
 
     private fun updateQsState() {

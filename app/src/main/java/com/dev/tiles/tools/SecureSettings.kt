@@ -4,7 +4,6 @@ import android.content.ContentResolver
 import android.content.Context
 import android.content.pm.PackageManager
 import android.provider.Settings
-import android.util.Log
 import androidx.core.content.PermissionChecker.checkCallingOrSelfPermission
 import com.dev.tiles.callbacks.PermissionCallback
 
@@ -21,7 +20,6 @@ class SecureSettings(private val contentResolver: ContentResolver, private val c
 
     fun toggleADB() {
         val adbStats = if (getADB() == 0) { 1 } else { 0 }
-        Log.d("ADBSTATUS", adbStats.toString())
         Settings.Global.putString(
             contentResolver,
             Settings.Global.ADB_ENABLED,
@@ -30,7 +28,6 @@ class SecureSettings(private val contentResolver: ContentResolver, private val c
 
     fun toggleDevOptions() {
         val devStats = if (getDevOptions() == 0) { 1 } else { 0 }
-        Log.d("DEVSTATUS", devStats.toString())
         Settings.Global.putString(
             contentResolver,
             Settings.Global.DEVELOPMENT_SETTINGS_ENABLED,
