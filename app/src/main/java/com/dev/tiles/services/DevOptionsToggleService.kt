@@ -15,9 +15,15 @@ class DevOptionsToggleService: TileService() {
     }
 
     private fun updateQsState() {
-        qsTile.state = if (SecureSettings(contentResolver, this).getDevOptions() == 1) {
-            Tile.STATE_ACTIVE
-        } else { Tile.STATE_INACTIVE }
+        if (SecureSettings(contentResolver, this).allowed(null)) {
+            qsTile.state = if (SecureSettings(contentResolver, this).getDevOptions() == 1) {
+                Tile.STATE_ACTIVE
+            } else {
+                Tile.STATE_INACTIVE
+            }
+        } else {
+            qsTile.state = Tile.STATE_UNAVAILABLE
+        }
         qsTile.updateTile()
     }
 
