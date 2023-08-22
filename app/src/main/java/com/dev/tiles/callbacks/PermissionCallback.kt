@@ -1,4 +1,4 @@
-package com.dev.tiles
+package com.dev.tiles.callbacks
 
 interface PermissionCallback {
     fun onAllowed()

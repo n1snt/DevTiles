@@ -6,7 +6,7 @@ import android.content.pm.PackageManager
 import android.provider.Settings
 import android.util.Log
 import androidx.core.content.PermissionChecker.checkCallingOrSelfPermission
-import com.dev.tiles.PermissionCallback
+import com.dev.tiles.callbacks.PermissionCallback
 
 
 class SecureSettings(private val contentResolver: ContentResolver, private val context: Context) {

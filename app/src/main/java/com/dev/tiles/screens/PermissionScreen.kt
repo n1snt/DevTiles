@@ -25,7 +25,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.dev.tiles.PermissionCallback
+import com.dev.tiles.callbacks.PermissionCallback
 import com.dev.tiles.R
 import com.dev.tiles.ui.theme.DevTilesTheme
 import kotlinx.coroutines.CoroutineScope
@@ -49,7 +49,7 @@ fun PermissionScreen(permissionCheck: (PermissionCallback) -> Unit, navigateToMa
                 floatingActionButton = {
                     ExtendedFloatingActionButton(
                         onClick = {
-                            val callback = object:PermissionCallback {
+                            val callback = object: PermissionCallback {
                                 override fun onAllowed() {
                                     navigateToMain()
                                 }
