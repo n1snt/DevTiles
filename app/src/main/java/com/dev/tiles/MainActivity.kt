@@ -8,156 +8,78 @@ import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Switch
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.dev.tiles.ui.theme.DevTilesTheme
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.dev.tiles.screens.MainScreen
+import com.dev.tiles.screens.PermissionScreen
+import com.dev.tiles.services.ADBToggleService
+import com.dev.tiles.services.DevOptionsToggleService
+import com.dev.tiles.tools.SecureSettings
 import com.dev.tiles.ui.theme.StatusBarNavbarColors
 
 class MainActivity : ComponentActivity() {
 
-    private var adbEnabled: Int = 0
-    private var devOptions: Int = 0
     private lateinit var secureSettings: SecureSettings
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        secureSettings = SecureSettings(contentResolver)
+        secureSettings = SecureSettings(contentResolver, this)
 
-        adbEnabled = secureSettings.getADB()
-        devOptions = secureSettings.getDevOptions()
+        val adbEnabled = secureSettings.getADB()
+        val devOptions = secureSettings.getDevOptions()
 
         setContent {
+            val navController = rememberNavController()
             val adbMutable = remember { mutableStateOf(adbEnabled) }
             val devMutable = remember { mutableStateOf(devOptions) }
+            val startDestination = if (secureSettings.allowed())  {
+                MAIN_SCREEN
+            } else { PERMISSION_SCREEN }
+
             StatusBarNavbarColors()
-            UI(adbMutable, devMutable, { secureSettings.toggleADB() }, { secureSettings.toggleDevOptions() },
-            {addToggleToQS()}) { updateStates(adbMutable, devMutable) }
+            NavHost(navController = navController, startDestination = startDestination) {
+                composable(MAIN_SCREEN) {
+                    MainScreen(adbMutable,
+                        devMutable,
+                        { secureSettings.toggleADB() },
+                        { secureSettings.toggleDevOptions() },
+                        { addToggleToQS(ADBToggleService::class.java, "ADB Toggle") },
+                        { addToggleToQS(DevOptionsToggleService::class.java, "Developer Options Toggle") },
+                        { updateStates(adbMutable, devMutable) }
+                    )
+                }
+                composable(PERMISSION_SCREEN) { PermissionScreen() }
+            }
         }
     }
 
-    fun updateStates(adbMutable: MutableState<Int>, devMutable: MutableState<Int>,) {
+    private fun updateStates(adbMutable: MutableState<Int>, devMutable: MutableState<Int>,) {
         adbMutable.value = secureSettings.getADB()
         devMutable.value = secureSettings.getDevOptions()
     }
 
-
     @SuppressLint("NewApi", "WrongConstant")
-    fun addToggleToQS() {
+    private fun addToggleToQS(serviceClass: Class<*>, title: String) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val statusBarManager = getSystemService(STATUS_BAR_SERVICE) as StatusBarManager
             statusBarManager.requestAddTileService(
                 ComponentName(
-                    "com.dev.tiles",
-                    "com.dev.tiles.services.ADBToggleService",
+                    this,
+                    serviceClass
                 ),
-                "ADB Toggle",
+                title,
                 Icon.createWithResource(this, R.drawable.outline_usb_24),
                 {}, {}
             )
         }
     }
-}
 
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun UI(
-    adbMutable: MutableState<Int>,
-    devMutable: MutableState<Int>,
-    toggleAdb: () -> Unit,
-    toggleDevOptions: () -> Unit,
-    addToggleToQS: () -> Unit,
-    updateStates: () -> Unit
-) {
-    DevTilesTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            Scaffold(
-                topBar = { TopAppBar(title = { Text(text = "DevTiles") }) },
-                modifier = Modifier.fillMaxSize()
-            ) { paddingValues ->
-
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                    modifier = Modifier
-                        .padding(paddingValues)
-                        .fillMaxSize()
-                        .padding(horizontal = 25.dp)
-                ) {
-
-                    Row(
-                        horizontalArrangement = Arrangement.Start,
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Text(text = "ADB",
-                            modifier = Modifier.fillMaxWidth(0.85F)
-                        )
-                        Switch(
-                            checked = adbMutable.value == 1,
-                            onCheckedChange = {
-                                toggleAdb()
-                                updateStates() },
-                        )
-                    }
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(text = "Developer Options",
-                            modifier = Modifier.fillMaxWidth(0.85F)
-                        )
-                        Switch(
-                            checked = devMutable.value == 1,
-                            onCheckedChange = {
-                                toggleDevOptions()
-                                updateStates() },
-                        )
-                    }
-
-                    Button(onClick = {
-                                     addToggleToQS()
-                                     },
-                        modifier = Modifier.padding(top = 20.dp)) {
-                        Text(text = "Add tiles to Quick Settings")
-                    }
-
-                }
-
-            }
-            
-            
-
-        }
+    companion object {
+        const val MAIN_SCREEN = "main"
+        const val PERMISSION_SCREEN = "permission"
     }
-}
-
-
-@SuppressLint("UnrememberedMutableState")
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun GreetingPreview() {
-    UI(mutableStateOf(0), mutableStateOf(0), {}, {}, {}) {}
 }

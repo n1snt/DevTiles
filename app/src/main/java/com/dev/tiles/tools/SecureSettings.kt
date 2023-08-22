@@ -1,10 +1,14 @@
-package com.dev.tiles
+package com.dev.tiles.tools
 
 import android.content.ContentResolver
+import android.content.Context
+import android.content.pm.PackageManager
 import android.provider.Settings
 import android.util.Log
+import androidx.core.content.PermissionChecker.checkCallingOrSelfPermission
 
-class SecureSettings(private val contentResolver: ContentResolver) {
+
+class SecureSettings(private val contentResolver: ContentResolver, private val context: Context) {
 
     fun getADB(): Int {
         return Settings.Global.getString(contentResolver, Settings.Global.ADB_ENABLED).toInt()
@@ -31,4 +35,11 @@ class SecureSettings(private val contentResolver: ContentResolver) {
             Settings.Global.DEVELOPMENT_SETTINGS_ENABLED,
             devStats.toString())
     }
+
+    fun allowed(): Boolean {
+        val requiredPermission = "android.permission.WRITE_SECURE_SETTINGS"
+        val checkVal = checkCallingOrSelfPermission(context, requiredPermission)
+        return checkVal == PackageManager.PERMISSION_GRANTED
+    }
+
 }
