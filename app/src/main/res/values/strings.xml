@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">DevTiles</string>
+    <string name="adb_toggle">ADB Toggle</string>
+    <string name="developer_options_toggle">Developer Options Toggle</string>
+    <string name="devtiles">DevTiles</string>
+    <string name="add_to_qs">Add to QS</string>
+    <string name="developer_options">Developer Options</string>
+    <string name="adb">ADB</string>
+    <string name="permission_not_granted">Permission not granted ⚠️</string>
+    <string name="check_permission">Check permission</string>
+    <string name="permission_not_granted_1">Permission not granted ❌</string>
 </resources>

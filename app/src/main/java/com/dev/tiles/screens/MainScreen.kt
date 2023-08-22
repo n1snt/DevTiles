@@ -22,6 +22,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -46,7 +47,7 @@ fun MainScreen(
             color = MaterialTheme.colorScheme.background
         ) {
             Scaffold(
-                topBar = { TopAppBar(title = { Text(text = "DevTiles") }) },
+                topBar = { TopAppBar(title = { Text(text = stringResource(R.string.devtiles)) }) },
                 modifier = Modifier.fillMaxSize()
             ) { paddingValues ->
 
@@ -67,10 +68,10 @@ fun MainScreen(
                             modifier = Modifier.padding(end = 10.dp)) {
                             Icon(
                                 imageVector = ImageVector.vectorResource(id = R.drawable.outline_pin_invoke_24),
-                                contentDescription = "Add to QS"
+                                contentDescription = stringResource(R.string.add_to_qs)
                             )
                         }
-                        Text(text = "ADB",
+                        Text(text = stringResource(R.string.adb),
                             modifier = Modifier.fillMaxWidth(0.80F)
                         )
                         Switch(
@@ -88,10 +89,10 @@ fun MainScreen(
                             modifier = Modifier.padding(end = 10.dp)) {
                             Icon(
                                 imageVector = ImageVector.vectorResource(id = R.drawable.outline_pin_invoke_24),
-                                contentDescription = "Add to QS"
+                                contentDescription = stringResource(R.string.add_to_qs)
                             )
                         }
-                        Text(text = "Developer Options",
+                        Text(text = stringResource(R.string.developer_options),
                             modifier = Modifier.fillMaxWidth(0.80F)
                         )
                         Switch(

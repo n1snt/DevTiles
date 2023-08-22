@@ -1,6 +1,7 @@
 package com.dev.tiles.screens
 
 import android.annotation.SuppressLint
+import android.content.res.Resources
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,6 +23,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -44,7 +46,7 @@ fun PermissionScreen(permissionCheck: (PermissionCallback) -> Unit, navigateToMa
             color = MaterialTheme.colorScheme.background
         ) {
             Scaffold(
-                topBar = { TopAppBar(title = { Text(text = "Permission not granted ⚠️") }) },
+                topBar = { TopAppBar(title = { Text(text = stringResource(R.string.permission_not_granted)) }) },
                 snackbarHost = { SnackbarHost(snackbarHostState) },
                 floatingActionButton = {
                     ExtendedFloatingActionButton(
@@ -54,7 +56,7 @@ fun PermissionScreen(permissionCheck: (PermissionCallback) -> Unit, navigateToMa
                                     navigateToMain()
                                 }
                                 override fun onDenied() {
-                                    permissionSnackbar("Permission not granted ❌", scope, snackbarHostState)
+                                    permissionSnackbar(Resources.getSystem().getString(R.string.permission_not_granted_1), scope, snackbarHostState)
                                 }
                             }
                             permissionCheck(callback)
@@ -63,10 +65,10 @@ fun PermissionScreen(permissionCheck: (PermissionCallback) -> Unit, navigateToMa
                         icon = {
                             Icon(
                                 ImageVector.vectorResource(id = R.drawable.outline_refresh_24),
-                                "Check permission"
+                                stringResource(R.string.check_permission)
                             )
                         },
-                        text = { Text(text = "Check permission") },
+                        text = { Text(text = stringResource(R.string.check_permission)) },
                         modifier = Modifier.padding(20.dp))
                 },
                 floatingActionButtonPosition = FabPosition.End,
@@ -80,7 +82,7 @@ fun PermissionScreen(permissionCheck: (PermissionCallback) -> Unit, navigateToMa
                         .fillMaxSize()
                         .padding(horizontal = 25.dp)
                 ) {
-                    Text(text="Instructions here")
+                    Text(text="TODO: Instructions here")
                 }
             }
         }

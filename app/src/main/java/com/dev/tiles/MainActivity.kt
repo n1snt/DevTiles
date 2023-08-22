@@ -47,8 +47,9 @@ class MainActivity : ComponentActivity() {
                         devMutable,
                         { secureSettings.toggleADB() },
                         { secureSettings.toggleDevOptions() },
-                        { addToggleToQS(ADBToggleService::class.java, "ADB Toggle") },
-                        { addToggleToQS(DevOptionsToggleService::class.java, "Developer Options Toggle") },
+                        { addToggleToQS(ADBToggleService::class.java, getString(R.string.adb_toggle)) },
+                        { addToggleToQS(DevOptionsToggleService::class.java,
+                            getString(R.string.developer_options_toggle)) },
                         { updateStates(adbMutable, devMutable) }
                     )
                 }
