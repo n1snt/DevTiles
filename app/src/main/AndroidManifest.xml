@@ -29,7 +29,7 @@
         <service
             android:exported="true"
             android:name=".services.ADBToggleService"
-            android:label="ADB"
+            android:label="@string/adb"
             android:icon="@drawable/outline_usb_24"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
@@ -42,7 +42,7 @@
         <service
             android:exported="true"
             android:name=".services.DevOptionsToggleService"
-            android:label="Developer Options"
+            android:label="@string/developer_options"
             android:icon="@drawable/outline_logo_dev_24"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
             <intent-filter>
