@@ -1,6 +1,5 @@
 package com.dev.tiles.screens
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,22 +21,29 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.dev.tiles.callbacks.PermissionCallback
 import com.dev.tiles.R
+import com.dev.tiles.tools.SecureSettings
+import com.dev.tiles.ui.components.reusableSnackbar
 import com.dev.tiles.ui.theme.DevTilesTheme
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
+
+/**
+ * This screen is displayed when the app is not granted the WRITE_SECURE_SETTINGS
+ * @param navigateToMain
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PermissionScreen(permissionCheck: (PermissionCallback) -> Unit, navigateToMain: () -> Unit) {
+fun PermissionScreen(navigateToMain: () -> Unit) {
 
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val secureSettings = SecureSettings(context.contentResolver, context)
 
     DevTilesTheme {
         Surface(
@@ -51,15 +57,11 @@ fun PermissionScreen(permissionCheck: (PermissionCallback) -> Unit, navigateToMa
                 floatingActionButton = {
                     ExtendedFloatingActionButton(
                         onClick = {
-                            val callback = object: PermissionCallback {
-                                override fun onAllowed() {
-                                    navigateToMain()
-                                }
-                                override fun onDenied() {
-                                    permissionSnackbar(permissionString, scope, snackbarHostState)
-                                }
+                            if (secureSettings.allowed()) {
+                                navigateToMain()
+                            } else {
+                                reusableSnackbar(permissionString, scope, snackbarHostState)
                             }
-                            permissionCheck(callback)
                         },
                         expanded = true,
                         icon = {
@@ -89,15 +91,9 @@ fun PermissionScreen(permissionCheck: (PermissionCallback) -> Unit, navigateToMa
     }
 }
 
-@SuppressLint("RememberReturnType", "CoroutineCreationDuringComposition")
-fun permissionSnackbar(message: String, scope: CoroutineScope, snackbarHostState: SnackbarHostState) {
-    scope.launch {
-        snackbarHostState.showSnackbar(message)
-    }
-}
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun Preview() {
-    PermissionScreen({ _ -> }, {})
+    PermissionScreen {}
 }

@@ -13,7 +13,7 @@ class ADBToggleService: TileService() {
     }
 
     private fun updateQsState() {
-        if (SecureSettings(contentResolver, this).allowed(null)) {
+        if (SecureSettings(contentResolver, this).allowed()) {
             qsTile.state = if (SecureSettings(contentResolver, this).getADB() == 1) {
                 Tile.STATE_ACTIVE
             } else { Tile.STATE_INACTIVE }

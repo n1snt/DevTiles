@@ -5,9 +5,11 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.provider.Settings
 import androidx.core.content.PermissionChecker.checkCallingOrSelfPermission
-import com.dev.tiles.callbacks.PermissionCallback
 
 
+/**
+ * This class works as an interface to read & write SECURE_SETTINGS
+ */
 class SecureSettings(private val contentResolver: ContentResolver, private val context: Context) {
 
     fun getADB(): Int {
@@ -34,16 +36,10 @@ class SecureSettings(private val contentResolver: ContentResolver, private val c
             devStats.toString())
     }
 
-    fun allowed(callback: PermissionCallback?): Boolean {
+    fun allowed(): Boolean {
         val requiredPermission = "android.permission.WRITE_SECURE_SETTINGS"
         val checkVal = checkCallingOrSelfPermission(context, requiredPermission)
-        val isAllowed = checkVal == PackageManager.PERMISSION_GRANTED
-        if (isAllowed) {
-            callback?.onAllowed()
-        } else {
-            callback?.onDenied()
-        }
-        return isAllowed
+        return checkVal == PackageManager.PERMISSION_GRANTED
     }
 
 }
