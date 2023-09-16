@@ -17,7 +17,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        secureSettings = SecureSettings(contentResolver, this)
         setContent {
             val navController = rememberNavController()
             val startDestination = if (secureSettings.allowed())  {

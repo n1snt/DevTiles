@@ -13,7 +13,7 @@ class DevOptionsToggleService: TileService() {
     }
 
     private fun updateQsState() {
-        if (SecureSettings(contentResolver, this).allowed()) {
+        if (SecureSettings(contentResolver, this).allowed() && !isLocked) {
             qsTile.state = if (SecureSettings(contentResolver, this).getDevOptions() == 1) {
                 Tile.STATE_ACTIVE
             } else {
